@@ -1,13 +1,17 @@
+import { useState } from "react";
 import styled from "styled-components";
+import PostModal from "./PostModal";
 
 const Main = () => {
+  const [showModal, setShowModal] = useState(false);
+  const handleClick = () => setShowModal(!showModal);
+
   return (
     <Container>
       <ShareBox>
-        Share
         <div>
           <img src="/images/user.svg" alt="" />
-          <button>게시글을 올려보세요 :)</button>
+          <button onClick={() => handleClick()}>게시글을 올려보세요 :)</button>
         </div>
         <div>
           <button>
@@ -188,6 +192,7 @@ const Main = () => {
           </SocialActions>
         </Article>
       </div>
+      <PostModal showModal={showModal} handleClick={handleClick} />
     </Container>
   );
 };
