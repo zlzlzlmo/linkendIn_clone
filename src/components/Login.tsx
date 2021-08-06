@@ -1,15 +1,34 @@
 import React from "react";
 import styled from "styled-components";
+import { useAppDispatch, useAppSelect } from "../redux/configStore";
+import { auth, provider } from "../firebase";
+import { setUserLoginDetails, UserState, getUser } from "../redux/modules/user";
+import { useHistory } from "react-router-dom";
 const Login = () => {
+  const history = useHistory();
+  const dispatch = useAppDispatch();
+  const user = useAppSelect(getUser);
+
+  const handleSignIn = () => {
+    auth.signInWithPopup(provider).then((result) => {
+      const user: UserState = {
+        name: result.user?.displayName,
+        email: result.user?.email,
+        photoURL: result.user?.photoURL,
+      };
+      dispatch(setUserLoginDetails(user));
+    });
+  };
   return (
     <Container>
+      {user.name && history.push("/home")}
       <Nav>
         <a href="/">
           <img src="/images/login-logo.svg" alt="" />
         </a>
         <div>
           <Join>회원가입</Join>
-          <SignIn>로그인</SignIn>
+          <SignIn onClick={() => handleSignIn()}>로그인</SignIn>
         </div>
       </Nav>
       <Section>
@@ -18,7 +37,7 @@ const Login = () => {
           <img src="/images/login-hero.svg" alt="" />
         </Hero>
         <Form>
-          <Google>
+          <Google onClick={() => handleSignIn()}>
             <img src="/images/google.svg" alt="" />
             Sign in with Google
           </Google>

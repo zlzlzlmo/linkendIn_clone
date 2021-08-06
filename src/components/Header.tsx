@@ -1,5 +1,18 @@
 import styled from "styled-components";
+import React from "react";
+import { useAppDispatch, useAppSelect } from "../redux/configStore";
+import { auth, provider } from "../firebase";
+import { setSignOutState, UserState, getUser } from "../redux/modules/user";
+import { useHistory } from "react-router-dom";
 const Header = () => {
+  const dispatch = useAppDispatch();
+  const history = useHistory();
+  const handleSignOut = () => {
+    auth.signOut().then(() => {
+      dispatch(setSignOutState());
+      history.push("/");
+    });
+  };
   return (
     <Container>
       <Content>
@@ -61,7 +74,7 @@ const Header = () => {
               </a>
 
               <SignOut>
-                <a>Sign Out</a>
+                <a onClick={() => handleSignOut()}>Sign Out</a>
               </SignOut>
             </User>
 
