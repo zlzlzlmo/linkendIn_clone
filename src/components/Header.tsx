@@ -7,6 +7,7 @@ import { useHistory } from "react-router-dom";
 const Header = () => {
   const dispatch = useAppDispatch();
   const history = useHistory();
+  const user = useAppSelect(getUser);
   const handleSignOut = () => {
     auth.signOut().then(() => {
       dispatch(setSignOutState());
@@ -68,8 +69,12 @@ const Header = () => {
 
             <User>
               <a>
-                <img src="/images/user.svg" alt="" />
-                <span>나</span>
+                {user.photoURL ? (
+                  <img src={user.photoURL} alt="" />
+                ) : (
+                  <img src="/images/user.svg" alt="" />
+                )}
+                <span>{user.name}</span>
                 <img src="/images/down-icon.svg" alt="" />
               </a>
 

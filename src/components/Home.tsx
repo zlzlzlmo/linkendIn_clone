@@ -2,10 +2,17 @@ import styled from "styled-components";
 import Leftside from "./Leftside";
 import Main from "./Main";
 import Rightside from "./Rightside";
-
+import { useAppDispatch, useAppSelect } from "../redux/configStore";
+import { auth, provider } from "../firebase";
+import { setSignOutState, UserState, getUser } from "../redux/modules/user";
+import { useHistory } from "react-router-dom";
 const Home = () => {
+  const dispatch = useAppDispatch();
+  const history = useHistory();
+  const user = useAppSelect(getUser);
   return (
     <Container>
+      {user.name || history.push("/")}
       <Section>
         <h5>
           <a>고용이 필요하신가요? - </a>
@@ -13,7 +20,7 @@ const Home = () => {
         <p>재능있는 전문가를 찾고 회사를 키워보세요!</p>
       </Section>
       <Layout>
-        <Leftside />
+        <Leftside user={user} />
         <Main />
         <Rightside />
       </Layout>

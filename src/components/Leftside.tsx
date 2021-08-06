@@ -1,6 +1,11 @@
 import styled from "styled-components";
+import { UserState } from "../redux/modules/user";
 
-const Leftside = () => {
+interface LeftSideProps {
+  user: UserState;
+}
+
+const Leftside: React.FC<LeftSideProps> = ({ user }) => {
   return (
     <Container>
       <ArtCard>
@@ -8,7 +13,7 @@ const Leftside = () => {
           <CardBackground />
           <a>
             <Photo />
-            <Link>환영합니다!</Link>
+            <Link>{user.name}님 환영합니다!</Link>
           </a>
           <a>
             <AddPhotoText>사진을 추가해보세요.</AddPhotoText>
