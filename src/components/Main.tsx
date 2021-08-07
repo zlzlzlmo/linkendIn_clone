@@ -2,7 +2,13 @@ import { useState } from "react";
 import styled from "styled-components";
 import PostModal from "./PostModal";
 
-const Main = () => {
+import { UserState } from "../redux/modules/user";
+
+interface MainProps {
+  user: UserState;
+}
+
+const Main: React.FC<MainProps> = ({ user }) => {
   const [showModal, setShowModal] = useState(false);
   const handleClick = () => setShowModal(!showModal);
 
@@ -192,7 +198,7 @@ const Main = () => {
           </SocialActions>
         </Article>
       </div>
-      <PostModal showModal={showModal} handleClick={handleClick} />
+      <PostModal user={user} showModal={showModal} handleClick={handleClick} />
     </Container>
   );
 };

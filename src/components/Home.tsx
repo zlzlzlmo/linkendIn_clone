@@ -2,12 +2,10 @@ import styled from "styled-components";
 import Leftside from "./Leftside";
 import Main from "./Main";
 import Rightside from "./Rightside";
-import { useAppDispatch, useAppSelect } from "../redux/configStore";
-import { auth, provider } from "../firebase";
-import { setSignOutState, UserState, getUser } from "../redux/modules/user";
+import { useAppSelect } from "../redux/configStore";
+import { getUser } from "../redux/modules/user";
 import { useHistory } from "react-router-dom";
 const Home = () => {
-  const dispatch = useAppDispatch();
   const history = useHistory();
   const user = useAppSelect(getUser);
   return (
@@ -21,7 +19,7 @@ const Home = () => {
       </Section>
       <Layout>
         <Leftside user={user} />
-        <Main />
+        <Main user={user} />
         <Rightside />
       </Layout>
     </Container>

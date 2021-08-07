@@ -1,8 +1,8 @@
 import styled from "styled-components";
 import React from "react";
 import { useAppDispatch, useAppSelect } from "../redux/configStore";
-import { auth, provider } from "../firebase";
-import { setSignOutState, UserState, getUser } from "../redux/modules/user";
+import { auth } from "../firebase";
+import { setSignOutState, getUser } from "../redux/modules/user";
 import { useHistory } from "react-router-dom";
 const Header = () => {
   const dispatch = useAppDispatch();

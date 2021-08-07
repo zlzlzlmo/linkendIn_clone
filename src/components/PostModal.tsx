@@ -1,14 +1,43 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import ReactPlayer from "react-player";
+import { UserState } from "../redux/modules/user";
+
 interface PostModalProps {
   showModal: boolean;
   handleClick: () => void;
+  user: UserState;
 }
-const PostModal: React.FC<PostModalProps> = ({ handleClick, showModal }) => {
-  const [editorText, setEditorText] = useState<any>("");
+const PostModal: React.FC<PostModalProps> = ({
+  handleClick,
+  showModal,
+  user,
+}) => {
+  const [editorText, setEditorText] = useState<string>("");
+  const [shareImage, setShareImage] = useState<Object>("");
+  const [videoLink, setVideoLink] = useState<string>("");
+  const [assetArea, setAssetArea] = useState<string>("");
 
+  const handleChange = React.useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (e.currentTarget.files !== null) {
+        const image = e.currentTarget.files[0];
+        setShareImage(image);
+      }
+    },
+    []
+  );
+
+  const switchAssetArea = (area: string) => {
+    setShareImage("");
+    setVideoLink("");
+    setAssetArea(area);
+  };
   const reset = () => {
     setEditorText("");
+    setShareImage("");
+    setVideoLink("");
+    setAssetArea("");
     handleClick();
   };
   return (
@@ -34,8 +63,12 @@ const PostModal: React.FC<PostModalProps> = ({ handleClick, showModal }) => {
             </Header>
             <SharedContent>
               <UserInfo>
-                <img src="/images/user.svg" alt="" />
-                <span>Name</span>
+                {user.photoURL ? (
+                  <img src={user.photoURL} alt="" />
+                ) : (
+                  <img src="/images/user.svg" alt="" />
+                )}
+                <span>{user.name}</span>
               </UserInfo>
               <Editor>
                 <textarea
@@ -43,12 +76,44 @@ const PostModal: React.FC<PostModalProps> = ({ handleClick, showModal }) => {
                   onChange={(e) => setEditorText(e.target.value)}
                   placeholder="나누고 싶은 생각이 있으세요?"
                   autoFocus={true}
-                ></textarea>
+                />
+                {assetArea === "image" ? (
+                  <UploadImage>
+                    <input
+                      type="file"
+                      accept="image/gif,image/jpeg,image/png"
+                      name="image"
+                      id="file"
+                      style={{ display: "none" }}
+                      onChange={handleChange}
+                    />
+                    <p>
+                      <label htmlFor="file">공유할 사진을 선택하세요</label>
+                    </p>
+                    {shareImage && (
+                      <img src={URL.createObjectURL(shareImage)} alt="" />
+                    )}
+                  </UploadImage>
+                ) : (
+                  assetArea === "media" && (
+                    <>
+                      <input
+                        type="text"
+                        placeholder="영상 링크를 넣으세요"
+                        value={videoLink}
+                        onChange={(e) => setVideoLink(e.target.value)}
+                      />
+                      {videoLink && (
+                        <ReactPlayer width={"100%"} url={videoLink} />
+                      )}
+                    </>
+                  )
+                )}
               </Editor>
             </SharedContent>
             <ShareCreation>
               <AttachAssets>
-                <AssetButton>
+                <AssetButton onClick={() => switchAssetArea("image")}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -61,7 +126,7 @@ const PostModal: React.FC<PostModalProps> = ({ handleClick, showModal }) => {
                     <path d="M19 4H5a3 3 0 00-3 3v10a3 3 0 003 3h14a3 3 0 003-3V7a3 3 0 00-3-3zm1 13a1 1 0 01-.29.71L16 14l-2 2-6-6-4 4V7a1 1 0 011-1h14a1 1 0 011 1zm-2-7a2 2 0 11-2-2 2 2 0 012 2z"></path>
                   </svg>{" "}
                 </AssetButton>
-                <AssetButton>
+                <AssetButton onClick={() => switchAssetArea("media")}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -91,7 +156,9 @@ const PostModal: React.FC<PostModalProps> = ({ handleClick, showModal }) => {
                   누구나
                 </AssetButton>
               </ShareComment>
-              <PostButton>올리기</PostButton>
+              <PostButton disabled={!editorText ? true : false}>
+                올리기
+              </PostButton>
             </ShareCreation>
           </Content>
         </Container>
@@ -109,6 +176,7 @@ const Container = styled.div`
   z-index: 1000;
   color: #000;
   background-color: rgba(0, 0, 0, 0.8);
+  animation: fadeIn 0.3s;
 `;
 
 const Content = styled.div`
@@ -216,10 +284,10 @@ const PostButton = styled.button`
   border-radius: 20px;
   padding-left: 16px;
   padding-right: 16px;
-  backround: #0a66c2;
-  color: #fff;
+  backround: ${(props) => (props.disabled ? "rgba(0,0,0,0.8)" : "#0a66c2")};
+  color: ${(props) => (props.disabled ? "rgba(1,1,1,0.2)" : "#fff")};
   &:hover {
-    background: #004182;
+    background: ${(props) => (props.disabled ? "rgba(0,0,0,0.8)" : "#004182")};
   }
 `;
 
@@ -235,6 +303,13 @@ const Editor = styled.div`
     height: 35px;
     font-size: 16px;
     margin-bottom: 20px;
+  }
+`;
+
+const UploadImage = styled.div`
+  text-align: center;
+  img {
+    width: 100%;
   }
 `;
 export default PostModal;
