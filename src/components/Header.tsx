@@ -78,8 +78,8 @@ const Header = () => {
                 <img src="/images/down-icon.svg" alt="" />
               </a>
 
-              <SignOut>
-                <a onClick={() => handleSignOut()}>Sign Out</a>
+              <SignOut onClick={() => handleSignOut()}>
+                <a>Sign Out</a>
               </SignOut>
             </User>
 

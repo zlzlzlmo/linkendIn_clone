@@ -2,15 +2,13 @@ import styled from "styled-components";
 import Leftside from "./Leftside";
 import Main from "./Main";
 import Rightside from "./Rightside";
-import { useAppDispatch, useAppSelect } from "../redux/configStore";
+import { useAppSelect } from "../redux/configStore";
 import { getUser } from "../redux/modules/user";
 import { useHistory } from "react-router-dom";
-import { useEffect } from "react";
 import {} from "../redux/modules/article";
 const Home = () => {
   const history = useHistory();
   const user = useAppSelect(getUser);
-  const dispatch = useAppDispatch();
 
   return (
     <Container>
@@ -33,12 +31,6 @@ const Home = () => {
 const Container = styled.div`
   padding-top: 52px;
   max-width: 100%;
-`;
-
-const Content = styled.div`
-  max-width: 1128px;
-  margin-left: auto;
-  margin-right: auto;
 `;
 
 const Section = styled.section`

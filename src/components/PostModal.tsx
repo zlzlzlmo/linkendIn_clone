@@ -6,7 +6,7 @@ import moment from "moment";
 import { UserState } from "../redux/modules/user";
 import { uploadArticleAPI } from "../redux/modules/article";
 import { useAppDispatch } from "../redux/configStore";
-import { ActorState, Article } from "../redux/modules/article";
+import { Article } from "../redux/modules/article";
 interface PostModalProps {
   showModal: boolean;
   handleClick: () => void;
@@ -71,7 +71,14 @@ const PostModal: React.FC<PostModalProps> = ({
           <Content>
             <Header>
               <h2>게시글을 작성하세요</h2>
-              <button onClick={() => reset()}>
+              <button
+                style={{
+                  border: "none",
+                  backgroundColor: "#fff",
+                  cursor: "pointer",
+                }}
+                onClick={() => reset()}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
@@ -112,7 +119,9 @@ const PostModal: React.FC<PostModalProps> = ({
                       onChange={handleChange}
                     />
                     <p>
-                      <label htmlFor="file">공유할 사진을 선택하세요</label>
+                      <label htmlFor="file">
+                        여기를 클릭하여 사진을 업로드 하세요 :)
+                      </label>
                     </p>
                     {shareImage && (
                       <img src={URL.createObjectURL(shareImage)} alt="" />
@@ -285,6 +294,9 @@ const AssetButton = styled.button`
   height: 40px;
   min-width: auto;
   color: rgba(0, 0, 0, 0.5);
+  border: none;
+  background-color: #fff;
+  cursor: pointer;
 `;
 const AttachAssets = styled.div`
   align-items: center;

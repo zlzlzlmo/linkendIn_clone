@@ -1,4 +1,3 @@
-import { useAppDispatch } from "./../configStore";
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { storage } from "../../firebase";
 import db from "../../firebase";
