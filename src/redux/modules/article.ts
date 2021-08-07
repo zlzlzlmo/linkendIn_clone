@@ -12,6 +12,7 @@ export interface ActorState {
 }
 
 export interface Article {
+  id?: string;
   actor: ActorState;
   comments: number;
   description: string;
@@ -29,13 +30,22 @@ const initialState: ArticleState = {
   is_loading: false,
 };
 
-const addArticleToFB = createAsyncThunk(
-  "addAricleDB",
-  async (data: Article): Promise<Object> => {
-    await db.collection("article").add(data);
-    return data;
-  }
-);
+const addArticleToFB = (data: Article) => {
+  return function (dispatch: any) {
+    db.collection("article")
+      .add(data)
+      .then(() => {
+        dispatch(getArticleFB());
+      });
+  };
+};
+
+export const deleteArticleFB = (id: any) => {
+  return async function (dispatch: any) {
+    await db.collection("article").doc(id).delete();
+    dispatch(getArticleFB());
+  };
+};
 
 export const uploadArticleAPI = (data: Article) => {
   return function (dispatch: any) {
@@ -72,7 +82,7 @@ export const getArticleFB = createAsyncThunk("getArticleFB", async () => {
     .get()
     .then((querySnapShot) => {
       querySnapShot.forEach((doc) => {
-        articleArray.push(doc.data());
+        articleArray.push({ id: doc.id, ...doc.data() });
       });
       return articleArray;
     });
@@ -89,19 +99,10 @@ const articleSlice = createSlice({
     setArticleState: (state, action: PayloadAction<Article[]>) => {
       state.list = action.payload;
     },
-    setPushArticleState: (state, action) => {
-      state.list.unshift(action.payload);
-    },
   },
   extraReducers: (builder) => {
-    builder.addCase(addArticleToFB.pending, (state) => {
-      state.is_loading = true;
-    });
-    builder.addCase(addArticleToFB.fulfilled, (state, action) => {
-      state.is_loading = false;
-      articleSlice.caseReducers.setPushArticleState(state, action);
-    });
     builder.addCase(getArticleFB.fulfilled, (state, action) => {
+      state.is_loading = false;
       articleSlice.caseReducers.setArticleState(state, action);
     });
   },

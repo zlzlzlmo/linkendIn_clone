@@ -3,7 +3,11 @@ import styled from "styled-components";
 import PostModal from "./PostModal";
 import { UserState } from "../redux/modules/user";
 import { useAppSelect, useAppDispatch } from "../redux/configStore";
-import { getAritcles, getArticleFB } from "../redux/modules/article";
+import {
+  getAritcles,
+  getArticleFB,
+  deleteArticleFB,
+} from "../redux/modules/article";
 import { useEffect } from "react";
 import ReactPlayer from "react-player";
 
@@ -19,6 +23,9 @@ const Main: React.FC<MainProps> = ({ user }) => {
   useEffect(() => {
     dispatch(getArticleFB());
   }, []);
+
+  const handleDeleteArticle = (id: any) => dispatch(deleteArticleFB(id));
+
   return (
     <>
       <Container>
@@ -124,22 +131,8 @@ const Main: React.FC<MainProps> = ({ user }) => {
                     </div>
                   </a>
                   <button>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      data-supported-dps="24x24"
-                      fill="currentColor"
-                      width="24"
-                      height="24"
-                      focusable="false"
-                    >
-                      <path d="M14 12a2 2 0 11-2-2 2 2 0 012 2zM4 10a2 2 0 102 2 2 2 0 00-2-2zm16 0a2 2 0 102 2 2 2 0 00-2-2z"></path>
-                    </svg>
+                    <a onClick={() => handleDeleteArticle(article.id)}>삭제</a>
                   </button>
-                  <ControlMenu>
-                    <li>삭제</li>
-                    <li>수정</li>
-                  </ControlMenu>
                 </SharedActor>
                 <Description>{article.description}</Description>
                 {article.sharedImage && (
@@ -339,6 +332,7 @@ const SharedActor = styled.div`
   align-items: center;
   display: flex;
   position: relative;
+
   a {
     margin-right: 12px;
     flex-grow: 1;
@@ -381,33 +375,14 @@ const SharedActor = styled.div`
     border: none;
     outline: none;
     cursor: pointer;
-    width: 35px;
     height: 35px;
-    border-radius: 50%;
-
-    &:hover {
-      background-color: rgba(0, 0, 0, 0.2);
+    a {
+      &:hover {
+        color: #0a66c2;
+      }
     }
   }
 `;
-const ControlMenu = styled.ul`
-  display: none;
-  width: 200px;
-  border-radius: 5px;
-  position: absolute;
-  right: 0;
-  top: 50%;
-  -webkit-box-shadow: -1px 4px 14px 0px rgba(0, 0, 0, 0.47);
-  box-shadow: -1px 4px 14px 0px rgba(0, 0, 0, 0.47);
-
-  li {
-    list-style: none;
-    text-align: left;
-    padding-left: 20px;
-    line-height: 35px;
-  }
-`;
-
 const Description = styled.div`
   padding: 0 16px;
   overflow: hidden;
