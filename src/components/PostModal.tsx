@@ -11,13 +11,11 @@ interface PostModalProps {
   showModal: boolean;
   handleClick: () => void;
   user: UserState;
-  setShowModal: any;
 }
 const PostModal: React.FC<PostModalProps> = ({
   handleClick,
   showModal,
   user,
-  setShowModal,
 }) => {
   const [editorText, setEditorText] = useState<string>("");
   const [shareImage, setShareImage] = useState<Object>("");
@@ -62,7 +60,7 @@ const PostModal: React.FC<PostModalProps> = ({
     };
 
     dispatch(uploadArticleAPI(data));
-    setShowModal(false);
+    reset();
   };
   return (
     <>

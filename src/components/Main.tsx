@@ -5,6 +5,8 @@ import { UserState } from "../redux/modules/user";
 import { useAppSelect, useAppDispatch } from "../redux/configStore";
 import { getAritcles, getArticleFB } from "../redux/modules/article";
 import { useEffect } from "react";
+import ReactPlayer from "react-player";
+
 interface MainProps {
   user: UserState;
 }
@@ -134,6 +136,10 @@ const Main: React.FC<MainProps> = ({ user }) => {
                       <path d="M14 12a2 2 0 11-2-2 2 2 0 012 2zM4 10a2 2 0 102 2 2 2 0 00-2-2zm16 0a2 2 0 102 2 2 2 0 00-2-2z"></path>
                     </svg>
                   </button>
+                  <ControlMenu>
+                    <li>삭제</li>
+                    <li>수정</li>
+                  </ControlMenu>
                 </SharedActor>
                 <Description>{article.description}</Description>
                 {article.sharedImage && (
@@ -143,7 +149,9 @@ const Main: React.FC<MainProps> = ({ user }) => {
                     </a>
                   </SharedImg>
                 )}
-
+                {article.video && (
+                  <ReactPlayer width={"100%"} url={article.video} />
+                )}
                 <SocialCounts>
                   <li>
                     <button>
@@ -231,7 +239,6 @@ const Main: React.FC<MainProps> = ({ user }) => {
         <PostModal
           user={user}
           showModal={showModal}
-          setShowModal={setShowModal}
           handleClick={handleClick}
         />
       </Container>
@@ -331,6 +338,7 @@ const SharedActor = styled.div`
   margin-bottom: 8px;
   align-items: center;
   display: flex;
+  position: relative;
   a {
     margin-right: 12px;
     flex-grow: 1;
@@ -372,6 +380,31 @@ const SharedActor = styled.div`
     background: transparent;
     border: none;
     outline: none;
+    cursor: pointer;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+  }
+`;
+const ControlMenu = styled.ul`
+  display: none;
+  width: 200px;
+  border-radius: 5px;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  -webkit-box-shadow: -1px 4px 14px 0px rgba(0, 0, 0, 0.47);
+  box-shadow: -1px 4px 14px 0px rgba(0, 0, 0, 0.47);
+
+  li {
+    list-style: none;
+    text-align: left;
+    padding-left: 20px;
+    line-height: 35px;
   }
 `;
 

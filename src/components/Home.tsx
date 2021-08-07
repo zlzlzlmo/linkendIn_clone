@@ -6,30 +6,27 @@ import { useAppSelect } from "../redux/configStore";
 import { getUser } from "../redux/modules/user";
 import { useHistory } from "react-router-dom";
 import {} from "../redux/modules/article";
+
 const Home = () => {
   const history = useHistory();
   const user = useAppSelect(getUser);
 
   return (
     <Container>
-      {user.name || history.push("/")}
+      {user.name !== null || history.push("/")}
       <Section>
-        <h5>
-          <a>고용이 필요하신가요? - </a>
-        </h5>
-        <p>재능있는 전문가를 찾고 회사를 키워보세요!</p>
+        <Layout>
+          <Leftside user={user} />
+          <Main user={user} />
+          <Rightside />
+        </Layout>
       </Section>
-      <Layout>
-        <Leftside user={user} />
-        <Main user={user} />
-        <Rightside />
-      </Layout>
     </Container>
   );
 };
 
 const Container = styled.div`
-  padding-top: 52px;
+  padding-top: 43px;
   max-width: 100%;
 `;
 
@@ -38,7 +35,6 @@ const Section = styled.section`
   padding: 16px 0;
   box-sizing: content-box;
   text-align: center;
-  text-decoration: underline;
   display: flex;
   justify-content: center;
   h5 {
