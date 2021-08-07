@@ -53,7 +53,7 @@ const PostModal: React.FC<PostModalProps> = ({
         email: user.email,
         name: user.name,
         photoURL: user.photoURL,
-        date: moment().format("YYYY-MM-DD"),
+        date: moment().format("YYYY-MM-DD HH:mm:ss"),
       },
       video: videoLink,
       sharedImage: shareImage,
