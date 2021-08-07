@@ -3,8 +3,9 @@ import { useDispatch, TypedUseSelectorHook, useSelector } from "react-redux";
 import { Store } from "redux";
 
 import user from "../redux/modules/user";
+import article from "../redux/modules/article";
 const store = configureStore({
-  reducer: { user },
+  reducer: { user, article },
   middleware: getDefaultMiddleware({
     serializableCheck: false,
   }),

@@ -3,7 +3,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { auth, provider } from "../../firebase";
 
-type UserStateValue = string | null | undefined;
+export type UserStateValue = string | null | undefined;
 
 export interface UserState {
   name: UserStateValue;

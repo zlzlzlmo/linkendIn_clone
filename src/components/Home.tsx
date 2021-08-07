@@ -2,12 +2,16 @@ import styled from "styled-components";
 import Leftside from "./Leftside";
 import Main from "./Main";
 import Rightside from "./Rightside";
-import { useAppSelect } from "../redux/configStore";
+import { useAppDispatch, useAppSelect } from "../redux/configStore";
 import { getUser } from "../redux/modules/user";
 import { useHistory } from "react-router-dom";
+import { useEffect } from "react";
+import {} from "../redux/modules/article";
 const Home = () => {
   const history = useHistory();
   const user = useAppSelect(getUser);
+  const dispatch = useAppDispatch();
+
   return (
     <Container>
       {user.name || history.push("/")}

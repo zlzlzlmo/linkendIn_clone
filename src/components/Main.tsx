@@ -3,7 +3,8 @@ import styled from "styled-components";
 import PostModal from "./PostModal";
 
 import { UserState } from "../redux/modules/user";
-
+import { useAppSelect } from "../redux/configStore";
+import { getAritcles } from "../redux/modules/article";
 interface MainProps {
   user: UserState;
 }
@@ -11,13 +12,19 @@ interface MainProps {
 const Main: React.FC<MainProps> = ({ user }) => {
   const [showModal, setShowModal] = useState(false);
   const handleClick = () => setShowModal(!showModal);
-
+  const articles = useAppSelect(getAritcles);
   return (
     <Container>
       <ShareBox>
         <div>
-          <img src="/images/user.svg" alt="" />
-          <button onClick={() => handleClick()}>게시글을 올려보세요 :)</button>
+          {user.photoURL !== null ? (
+            <img src={user.photoURL} alt="" />
+          ) : (
+            <img src="/images/user.svg" alt="" />
+          )}
+          <button onClick={() => handleClick()} disabled={articles.is_loading}>
+            게시글을 올려보세요 :)
+          </button>
         </div>
         <div>
           <button>
@@ -82,7 +89,10 @@ const Main: React.FC<MainProps> = ({ user }) => {
           </button>
         </div>
       </ShareBox>
-      <div>
+      <Content>
+        {articles.is_loading && (
+          <img src="/images/loading_spinner.svg" alt="" />
+        )}
         <Article>
           <SharedActor>
             <a>
@@ -197,14 +207,26 @@ const Main: React.FC<MainProps> = ({ user }) => {
             </button>
           </SocialActions>
         </Article>
-      </div>
-      <PostModal user={user} showModal={showModal} handleClick={handleClick} />
+      </Content>
+      <PostModal
+        user={user}
+        showModal={showModal}
+        setShowModal={setShowModal}
+        handleClick={handleClick}
+      />
     </Container>
   );
 };
 
 const Container = styled.div`
   grid-area: main;
+`;
+
+const Content = styled.div`
+  text-align: center;
+  & > img {
+    width: 80px;
+  }
 `;
 
 const CommonCard = styled.div`
@@ -221,7 +243,7 @@ const CommonCard = styled.div`
 const ShareBox = styled(CommonCard)`
   display: flex;
   flex-direction: column;
-  color: #9587b;
+  color: #fff;
   margin: 0 0 8px;
   background: white;
   div {

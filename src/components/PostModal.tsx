@@ -1,23 +1,29 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import ReactPlayer from "react-player";
-import { UserState } from "../redux/modules/user";
+import moment from "moment";
 
+import { UserState } from "../redux/modules/user";
+import { uploadArticleAPI } from "../redux/modules/article";
+import { useAppDispatch } from "../redux/configStore";
+import { ActorState, Article } from "../redux/modules/article";
 interface PostModalProps {
   showModal: boolean;
   handleClick: () => void;
   user: UserState;
+  setShowModal: any;
 }
 const PostModal: React.FC<PostModalProps> = ({
   handleClick,
   showModal,
   user,
+  setShowModal,
 }) => {
   const [editorText, setEditorText] = useState<string>("");
   const [shareImage, setShareImage] = useState<Object>("");
   const [videoLink, setVideoLink] = useState<string>("");
   const [assetArea, setAssetArea] = useState<string>("");
-
+  const dispatch = useAppDispatch();
   const handleChange = React.useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       if (e.currentTarget.files !== null) {
@@ -39,6 +45,24 @@ const PostModal: React.FC<PostModalProps> = ({
     setVideoLink("");
     setAssetArea("");
     handleClick();
+  };
+
+  const handleUpload = () => {
+    const data: Article = {
+      actor: {
+        email: user.email,
+        name: user.name,
+        photoURL: user.photoURL,
+        date: moment().format("YYYY-MM-DD"),
+      },
+      video: videoLink,
+      sharedImage: shareImage,
+      description: editorText,
+      comments: 0,
+    };
+
+    dispatch(uploadArticleAPI(data));
+    setShowModal(false);
   };
   return (
     <>
@@ -156,7 +180,10 @@ const PostModal: React.FC<PostModalProps> = ({
                   누구나
                 </AssetButton>
               </ShareComment>
-              <PostButton disabled={!editorText ? true : false}>
+              <PostButton
+                disabled={!editorText ? true : false}
+                onClick={() => handleUpload()}
+              >
                 올리기
               </PostButton>
             </ShareCreation>
@@ -226,7 +253,7 @@ const SharedContent = styled.div`
 `;
 const UserInfo = styled.div`
   display: flex;
-  align-item: center;
+  align-items: center;
   padding: 12px 24px;
   svg,
   img {
@@ -247,9 +274,9 @@ const UserInfo = styled.div`
 `;
 
 const ShareCreation = styled.div`
-  display:flex;
-  justify-content:space-between;
-  padding:12px 24px; 12px; 16px;
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 24px 12px 16px;
 `;
 
 const AssetButton = styled.button`
@@ -284,7 +311,7 @@ const PostButton = styled.button`
   border-radius: 20px;
   padding-left: 16px;
   padding-right: 16px;
-  backround: ${(props) => (props.disabled ? "rgba(0,0,0,0.8)" : "#0a66c2")};
+  background: ${(props) => (props.disabled ? "rgba(0,0,0,0.8)" : "#0a66c2")};
   color: ${(props) => (props.disabled ? "rgba(1,1,1,0.2)" : "#fff")};
   &:hover {
     background: ${(props) => (props.disabled ? "rgba(0,0,0,0.8)" : "#004182")};
