@@ -130,9 +130,13 @@ const Main: React.FC<MainProps> = ({ user }) => {
                       <span>{article.actor.date}</span>
                     </div>
                   </a>
-                  <button>
-                    <a onClick={() => handleDeleteArticle(article.id)}>삭제</a>
-                  </button>
+                  {user.name === article.actor.name && (
+                    <button>
+                      <a onClick={() => handleDeleteArticle(article.id)}>
+                        삭제
+                      </a>
+                    </button>
+                  )}
                 </SharedActor>
                 <Description>{article.description}</Description>
                 {article.sharedImage && (
