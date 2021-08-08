@@ -19,6 +19,7 @@ const Login = () => {
       dispatch(setUserLoginDetails(user));
     });
   };
+
   return (
     <Container>
       {user.name && history.push("/home")}
